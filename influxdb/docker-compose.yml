@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  influxdb:
+    image: influxdb:2.2.0
+    volumes:
+      - /Users/hinha/Database/influxdb/influxdb-docker-data-volume:/var/lib/influxdb2:rw
+    ports:
+      - "8086:8086"
+    networks:
+      - influxdb2
+  
+  telegraf:
+    image: telegraf:latest
+    links:
+      - influxdb
+    volumes:
+      - /Users/hinha/Database/influxdb/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    environment:
+      - INFLUX_TOKEN=token
+      - DOCKER_INFLUXDB_INIT_ORG=org
+      - DOCKER_INFLUXDB_INIT_BUCKET=local
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=token
+    networks:
+      - influxdb2
+    
